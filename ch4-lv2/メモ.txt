@@ -1,0 +1,8 @@
+ビルドは通ったが、
+
+mainの
+InvoiceRepository  repository  = new InvoiceRepository(null);
+がnullを送っているため、
+
+InvoiceRepository.javaのinsert(Invoice invoice)
+内のtryが失敗している
