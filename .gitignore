@@ -1,0 +1,10 @@
+/.metadata/
+
+#個人定義
+*/lib/*
+*/bin/*
+*/.gitignore
+/*.class
+*/.project
+*/.classpath
+Servers/*
