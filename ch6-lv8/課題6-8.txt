@@ -1,0 +1,37 @@
+
+
+id	select_type	table	type	possible_keys	key	key_len	 ref	 rows	     Extra
+1	SIMPLE	　　　　o	ALL	NULL	　　　　NULL	NULL	 NULL	 8000000     Using where; Using temporary; Using filesort
+1	SIMPLE	　　　　m	ALL	PRIMARY	　　　　NULL	NULL	 NULL	 500000	     Using where; Using join buffer
+1	SIMPLE	　　　　oi	ALL	NULL	　　　　NULL	NULL	 NULL	 24000000    Using where; Using join buffer
+
+
+①
+1行目　インデックス無しのフルスキャン。一時テーブルとソートで負荷がかかっている
+2行目　主キーがあるのにフルスキャン。無理やりバッファを使って結合してる
+3行目　インデックス無しのフルスキャン。無理やりバッファを使って結合してる
+
+②
+インデックスが使えず、無理やりバッファを使って処理しているため
+
+③
+other.order_dateとother.statusのインデックス
+-> where文の高速化
+
+order_items.order_id)のインデックス
+-> 結合の高速化
+
+members.idのインデックス
+-> 結合の高速化
+
+④
+CREATE INDEX other_other_status_index ON orders (order_date, status);
+CREATE INDEX items_other_index ON order_items (order_id);
+CREATE INDEX members_id_index ON members (id);
+
+⑤
+range
+eq_ref
+ref
+
+
