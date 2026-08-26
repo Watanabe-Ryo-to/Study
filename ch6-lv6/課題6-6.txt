@@ -1,0 +1,16 @@
+①
+全件探索
+不必要なものも一致検索していて非常に効率悪い
+
+②
+emailでのみ検索していて、他のインデックスが指定されてないから
+
+③
+ALTER TABLE members ADD INDEX email_index (email);
+
+④
+type           -> ref
+possible_keys  -> email_index
+key            -> email_index
+rows           -> 1
+Extra          -> null
