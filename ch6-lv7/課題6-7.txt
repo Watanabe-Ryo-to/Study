@@ -1,0 +1,17 @@
+
+id	select_type	table	type	         possible_keys	        key	key_len	 ref	 rows	 Extra
+1	SIMPLE	orders	ref	idx_customer_id	 idx_customer_id	4	const	 50000	 Using   index condition; Using where
+
+
+①
+customer_id 1つ毎に50,000件のデータを持っているから
+
+②
+インデックス（idx_customer_id）で抽出した後、status = '処理中'でも抽出してるから
+
+③
+ALTER TABLE orders ADD INDEX idx_customer_status (customer_id, status);
+
+④
+customer_idの方が、statusよりも種類が多く、余計なデータを早期に弾き、検索回数を減らせるから
+statusが先の場合、1/4にしか検索回数を減らせないため
