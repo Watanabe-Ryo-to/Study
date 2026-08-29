@@ -1,0 +1,32 @@
+
+id	select_type	table	type	possible_keys	key	key_len	ref	rows	Extra
+1	SIMPLE		c	ALL	PRIMARY		NULL	NULL	NULL	80	Using where; Using temporary; Using filesort
+1	SIMPLE		p	ALL	NULL		NULL	NULL	NULL	300000	Using where
+
+
+id	select_type	table	type	possible_keys	key		key_len	ref	rows	Extra
+1	SIMPLE		s	ALL	idx_warehouse	NULL		NULL	NULL	3600000	Using where; Using filesort
+1	SIMPLE		p	ALL	PRIMARY		NULL		NULL	NULL	300000	Using where; Using join buffer
+1	SIMPLE		w	ref	PRIMARY		idx_warehouse	4	const	1	（空欄）
+
+
+
+
+①
+インデックスを設定してないから
+
+②
+インデックスが使われてないから
+idx_warehouse は join でしかおそらく影響しておらず、効果が低い為、使われなかったと予想する
+
+③
+CREATE INDEX categories_name_idx       ON categories (name);
+CREATE INDEX products_active_price_idx ON products   (is_active, price);
+
+④
+CREATE INDEX stocks_quantity_reorder_idx ON stocks   (quantity, reorder_point);
+CREATE INDEX products_active_idx         ON products (is_active);
+
+④
+どちらもインデックスが足りない
+Bに比べてAの方がより早くなる
