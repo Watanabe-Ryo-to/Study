@@ -1,0 +1,61 @@
+①
+会員情報を1つずつ所得するSQLを走らせてしまっている
+
+SELECT orders.id,
+       orders.member_id,
+       orders.order_date,
+       orders.total_amount,
+       members.name, 
+       members.rank,
+       members.region
+FROM orders
+
+JOIN members ON orders.member_id = members.id
+
+WHERE orders.order_date BETWEEN '2026-05-01' AND '2026-05-31'
+  AND orders.status = '発送済';
+
+
+②
+・フルスキャン実行、インデックス無し、一時バッファ使用
+・フルスキャン実行、インデックス使えず、一時バッファを使用し結合
+・フルスキャン実行、インデックス無し、一時バッファを使用し結合
+・フルスキャン実行、インデックス使えず、一時バッファを使用し結合
+・フルスキャン実行、インデックス使えず、一時バッファを使用し結合
+
+③
+1行目　インデックスが無く、フルスキャンしている
+2行目　インデックスが使えず、フルスキャンしている
+3行目　インデックスが無く、フルスキャンしている
+4行目　インデックスが使えず、フルスキャンしている
+
+④⑤
+優先1
+ordersの絞り込みの効率改善
+CREATE INDEX idx_orders_date_status ON orders(order_date, status);
+
+優先2
+order_itemsの絞り込みの効率改善
+CREATE INDEX idx_other_items_id ON order_items(order_id);
+
+優先3
+members、productsにインデックス追加
+絞り込みの効率改善
+CREATE INDEX idx_members_id  ON members(id);
+CREATE INDEX idx_products_id ON products(id);
+
+⑥
+1　range
+2　eq_ref
+3　ref
+4　eq_ref
+5　ALL
+
+⑦
+パーティショニング
+ordersを予め月ごとで分けておけば、1行目の処理はかなり高速化できると予想する
+
+
+
+
+
